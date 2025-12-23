@@ -14,11 +14,18 @@ class TextType(Enum):
 
 class TextNode:
     def __init__(self, text: str, text_type: TextType, url: str=None) -> None:
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+        if not isinstance(text_type, TextType):
+            raise TypeError("text_type must be a TextType")
+
         if text_type == TextType.LINK or text_type == TextType.IMAGE:
             if url is None:
-                raise Exception("Link or image with no url")
+                raise ValueError("Link or image with no url")
+            elif not isinstance(url, str):
+                raise TypeError("url must be a string for LINK or IMAGE")
         elif url is not None:
-            raise Exception(f"{text_type} does not support url")
+            raise ValueError(f"{text_type} does not support url")
 
         self.text = text
         self.text_type = text_type
