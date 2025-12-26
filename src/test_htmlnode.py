@@ -1,6 +1,9 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
+
+
+
 keys = ["attribute1", "attribute2", "attribute3"]
 values = ["value1", "value2", "value3"]
 
@@ -26,6 +29,15 @@ class TestHTLMNode(unittest.TestCase):
             self.assertIn(f'  {k}="{v}"', output)
 
 
+
+class TestLeafNode(unittest.TestCase):
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+        node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertEqual(node.to_html(),'<a  href="https://www.google.com">Click me!</a>')
+        node = LeafNode("x", "Text", {"k1": "v1", "k2": "v2", "k3": "v3"})
+        self.assertEqual(node.to_html(), '<x  k1="v1"  k2="v2"  k3="v3">Text</x>')
 
 if __name__ == "__main__":
     unittest.main()
