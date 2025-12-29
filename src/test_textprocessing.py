@@ -1,6 +1,11 @@
 import unittest
 
-from textprocessing import text_node_to_html_node, split_nodes_delimiter
+from textprocessing import (
+    text_node_to_html_node,
+    split_nodes_delimiter,
+    extract_markdown_images,
+    extract_markdown_links,
+)
 from textnode import TextType, TextNode
 from htmlnode import LeafNode
 
@@ -234,4 +239,20 @@ class test_split_nodes_delimiter(unittest.TestCase):
         Exception,
         split_nodes_delimiter,
         test_not_splitables, "**", TextType.PLAIN_TEXT
+        )
+
+
+
+class test_extract_markdown_images(unittest.TestCase):
+    def test_images(self):
+        self.assertEqual(
+            extract_markdown_images("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"),
+            [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")]
+        )
+
+class test_extract_markdown_links(unittest.TestCase):
+    def test_links(self):
+        self.assertEqual(
+            extract_markdown_links("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"),
+            [("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")]
         )
