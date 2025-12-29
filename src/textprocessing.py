@@ -110,7 +110,7 @@ def split_nodes_links(old_nodes: list[TextNode]) -> list[TextNode]:
         for image in images:
             alt_text = image[0]
             url = image[1]
-            new_texts = text.split(f"![{alt_text}]({url})", 1)
+            new_texts = text.split(f"[{alt_text}]({url})", 1)
             new_text = new_texts[0]
             text = new_texts[1]
             if  new_text:
