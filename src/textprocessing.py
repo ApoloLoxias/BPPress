@@ -97,28 +97,25 @@ def split_nodes_images(old_nodes: list[TextNode]) -> list[TextNode]:
         if text: #This happens only after the last image, avoiding duplication of texts in between 2 images
             new_nodes.append(TextNode(text, text_type))
     return new_nodes
-    """
-            if len(new_texts) % 2 == 0:W
-                raise Exception("Invalid markdown syntax")
-            for i in range(0, len(new_texts)):
-                new_text = new_texts[i]
-                if new_text == "":
-                    continue
-                if i % 2 == 0:
-                    new_text_type = text_type
-                    new_node = TextNode(text_type=new_text_type, text=new_text)
-                else:
-                    new_node = TextNode(
-                        text_type=TextType.IMAGE,
-                        text=image[0],
-                        url=image[1]
-                    )
-                new_nodes.append(new_node)
-    return new_nodes
-    """
 
-"""
-print(
-    split_nodes_images([TextNode("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png), as well as some trailing text", TextType.PLAIN_TEXT)])
-)
-"""
+def split_nodes_links(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes = []
+    for node in old_nodes:
+        text = node.text
+        text_type = node.text_type
+        images = extract_markdown_links(text)
+        if not images:
+            new_nodes.append(node)
+            continue
+        for image in images:
+            alt_text = image[0]
+            url = image[1]
+            new_texts = text.split(f"![{alt_text}]({url})", 1)
+            new_text = new_texts[0]
+            text = new_texts[1]
+            if  new_text:
+                new_nodes.append(TextNode(new_text, text_type))
+            new_nodes.append(TextNode(alt_text, TextType.LINK, url))
+        if text: #This happens only after the last image, avoiding duplication of texts in between 2 images
+            new_nodes.append(TextNode(text, text_type))
+    return new_nodes

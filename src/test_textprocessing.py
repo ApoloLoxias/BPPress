@@ -6,6 +6,7 @@ from textprocessing import (
     extract_markdown_images,
     extract_markdown_links,
     split_nodes_images,
+    split_nodes_links,
 )
 from textnode import TextType, TextNode
 from htmlnode import LeafNode
@@ -307,4 +308,73 @@ class test_split_nodes_images(unittest.TestCase):
                 TextNode(", as well as some trailing text.", TextType.PLAIN_TEXT)
             ],
             new_nodes3
+        )
+
+class test_split_nodes_links(unittest.TestCase):
+    def split_singleton(self):
+        text = TextNode("This is text with a [link](https://boot.dev)", TextType.PLAIN_TEXT)
+        output = [
+            TextNode("This is text with a ", TextType.PLAIN_TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        self.assertListEqual(
+            split_nodes_links([text]),
+            output
+        )
+
+    def split_lonely(self):
+        text = TextNode("[link](https://boot.dev)", TextType.PLAIN_TEXT)
+        output = [TextNode("link", TextType.LINK, url="https:boot.dev")]
+        self.assertListEqual(
+            split_nodes_links([text]),
+            output
+        )
+
+    def split_trailing(self):
+        text = TextNode("This is text with a [link](https://boot.dev) and some trailing text", TextType.PLAIN_TEXT)
+        output = [
+            TextNode("This is text with a ", TextType.PLAIN_TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode(" and some trailing text", TextType.PLAIN_TEXT),
+        ]
+        self.assertListEqual(
+            split_nodes_links([text]),
+            output
+        )
+        
+    def split_multi_link(self):
+        text = TextNode ("This is text with a [link](https://boot.dev) and [another link](https://wiki.archlinux.org)", TextType.PLAIN_TEXT)
+        output = [
+            TextNode("This is text with a ", TextType.PLAIN_TEXT),
+            TexNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode(" and ", TextType.PLAIN_TEXT),
+            TextNOde("another link", textType.LINK, "https://wiki.archlinux.org"),
+        ]
+        self.assertListEqual(
+            split_nodes_links([text]),
+            output
+        )
+        
+    def split_multi_nodes(self):
+        texts = [
+            TextNode("This is text with a [link](https://boot.dev)", TextType.PLAIN_TEXT),
+            TextNode("[link](https://boot.dev)", TextType.PLAIN_TEXT),
+            TextNode("This is text with a [link](https://boot.dev) and some trailing text", TextType.PLAIN_TEXT),
+            TextNode ("This is text with a [link](https://boot.dev) and [another link](https://wiki.archlinux.org)", TextType.PLAIN_TEXT),
+        ]
+        output =[
+            TextNode("This is text with a ", TextType.PLAIN_TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode("link", TextType.LINK, url="https:boot.dev"),
+            TextNode("This is text with a ", TextType.PLAIN_TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode(" and some trailing text", TextType.PLAIN_TEXT),
+            TextNode("This is text with a ", TextType.PLAIN_TEXT),
+            TexNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode(" and ", TextType.PLAIN_TEXT),
+            TextNOde("another link", textType.LINK, "https://wiki.archlinux.org"),
+        ]
+        self.assertListEqual(
+            split_nodes_links(texts),
+            output
         )
