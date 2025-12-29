@@ -119,3 +119,15 @@ def split_nodes_links(old_nodes: list[TextNode]) -> list[TextNode]:
         if text: #This happens only after the last image, avoiding duplication of texts in between 2 images
             new_nodes.append(TextNode(text, text_type))
     return new_nodes
+
+
+
+def text_to_text_nodes(text: str) -> list[TextNode]:
+    output = []
+    text_nodes = [TextNode(text, TextType.PLAIN_TEXT)]
+    text_nodes = split_nodes_delimiter(text_nodes, "**", TextType.PLAIN_TEXT)
+    text_nodes = split_nodes_delimiter(text_nodes, "_", TextType.PLAIN_TEXT)
+    text_nodes = split_nodes_delimiter(text_nodes, "`", TextType.PLAIN_TEXT)
+    text_nodes = split_nodes_images(text_nodes)
+    text_nodes = split_nodes_links(text_nodes)
+    return text_nodes

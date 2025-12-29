@@ -7,6 +7,7 @@ from textprocessing import (
     extract_markdown_links,
     split_nodes_images,
     split_nodes_links,
+    text_to_text_nodes
 )
 from textnode import TextType, TextNode
 from htmlnode import LeafNode
@@ -378,3 +379,22 @@ class test_split_nodes_links(unittest.TestCase):
             split_nodes_links(texts),
             output
         )
+
+
+
+class test_text_to_text_nodes(unittest.TestCase):
+    def test_text_to_nodes(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        output = [
+            TextNode("This is ", TextType.PLAIN_TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.PLAIN_TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.PLAIN_TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.PLAIN_TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextType.PLAIN_TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        self.assertListEqual(text_to_text_nodes(text), output)
