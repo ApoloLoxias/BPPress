@@ -1,7 +1,6 @@
 import unittest
 
 from inlinemd import (
-    text_node_to_html_node,
     split_nodes_delimiter,
     extract_markdown_images,
     extract_markdown_links,
