@@ -1,6 +1,6 @@
 import unittest
 
-from blockmd import markdown_to_blocks
+from blockmd import markdown_to_blocks, BlockType, block_to_block_type
 
 
 
@@ -24,3 +24,26 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
+
+
+
+class test_block_to_blocktype(unittest.TestCase):
+    def test_block_to_blocktype(self):
+        blocks = [
+            "Paragrah",
+            "### Heading",
+            "```Code```",
+            ">Quote\n>second line",
+            "- Unoredered\n- List",
+            "1. Ordered\n2. List",
+        ]
+        text_types = [
+            BlockType.PARAGRAPH,
+            BlockType.HEADING,
+            BlockType.CODE,
+            BlockType.QUOTE,
+            BlockType.UNORDERED_LIST,
+            BlockType.ORDERED_LIST,
+        ]
+        for block, text_type in zip(blocks, text_types):
+            self.assertEqual(block_to_block_type(block), text_type)
