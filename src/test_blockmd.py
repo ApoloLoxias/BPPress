@@ -64,16 +64,16 @@ class test_MD_Block(unittest.TestCase):
 
             """,
             "### Heading  \n",
-            "```Code```",
-            ">Quote\n>second line",
+            "```\n    Indented Code line\nunindented code line\n    Indented again   \n   ```",
+            ">Quote \n>second line\n\n> Third line after empty line \n  \n",
             "- Unoredered\n- List",
             "1. Ordered\n2. List",
         ]
         texts = [
             "This is **bolded** paragraph text in a p tag here",
             "Heading",
-            None,
-            None,
+            "    Indented Code line\nunindented coded line\n    Indented again",
+            "Quote\nsecond line\n\nThird line after empty line",
             None,
             None,
         ]

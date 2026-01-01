@@ -96,10 +96,18 @@ class MD_Block:
         return text
 
     def normalize_quote(self) -> str:
-        pass
+        text = self.block.split("\n")
+        for line in text:
+            line = line[1:]
+            line.strip()
+        text = "\n".join(text)
+        text.strip()
+        return text
 
     def normalize_code(self) -> str:
-        pass
+        text = self.block[3:-3]
+        text = text.lstrip("\n")
+        text = text.rstrip()
 
     def normalize_ul(self) -> str:
         pass
