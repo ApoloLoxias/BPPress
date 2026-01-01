@@ -110,10 +110,16 @@ class MD_Block:
         text = text.rstrip()
 
     def normalize_ul(self) -> str:
-        pass
+        text = self.block.strip()
+        text = self.block.split("\n")
+        for line in text:
+            line = line[1:]
+            line = line.strip()
+        text = "\n".join(text)
+        return text
 
     def normalize_ol(self) -> str:
-        pass
+        return self.normalize_ul()
 
     def preformat(self):
         pass
